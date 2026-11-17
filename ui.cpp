@@ -1,10 +1,5 @@
 // ===========================================================================
 // ui.cpp - Toolbar, buttons, status pill and the shared UI fonts.
-//
-// Layout
-//   row 1 (y 12..36)   brand on the left, status pill on the right
-//   row 2 (y 44..78)   the five action buttons, evenly spaced
-//
 // The buttons are the only place that changes gameState, which keeps the state
 // machine honest: a search can only start from StateWaiting, i.e. once the
 // maze has finished generating.
@@ -25,13 +20,12 @@ namespace {
 
 using PQueue = std::priority_queue<PriorityNode, std::vector<PriorityNode>, std::greater<PriorityNode>>;
 
-// ---------------------------------------------------------------------------
 // Fonts
 //
 // Two rasterisation sizes are loaded so that every piece of text is drawn at
 // roughly the size it was rasterised at. Drawing a 64px atlas down to 13px
 // samples far too few texels and the glyph edges come out jagged.
-// ---------------------------------------------------------------------------
+
 Font g_fontSmall;  // 13px text: buttons and the status pill
 Font g_fontLarge;  // 19px text: the brand
 bool g_fontsLoaded = false;
@@ -52,21 +46,15 @@ void DrawTextCentered(Font font, const char *text, Rectangle box, float size, Co
                {box.x + (box.width - m.x) * 0.5f, box.y + (box.height - m.y) * 0.5f},
                size, TRACKING, color);
 }
-
-// ---------------------------------------------------------------------------
 // Local shades that only the toolbar needs
-// ---------------------------------------------------------------------------
 const Color ButtonBase     = { 19, 24, 33, 255 };
 const Color ButtonDisabled = { 16, 20, 27, 255 };
 const Color BorderDisabled = { 33, 40, 52, 255 };
 const Color InkOnAccent    = { 10, 13, 18, 255 };
 
-// ---------------------------------------------------------------------------
 // One toolbar button.
-//
 // Three visual states matter: disabled (greyed out), idle (accent outline that
 // brightens on hover) and running (filled with the accent colour).
-// ---------------------------------------------------------------------------
 struct ToolButton {
     Rectangle rec;
     const char *label;
@@ -126,9 +114,9 @@ struct ToolButton {
     }
 };
 
-// ---------------------------------------------------------------------------
+
 // Status pill: a coloured dot plus a short message, anchored top-right.
-// ---------------------------------------------------------------------------
+
 void DrawStatusPill(const char *text, Color accent, bool pulsing) {
     const float size = 12.0f;
     const float height = 24.0f;
@@ -140,7 +128,7 @@ void DrawStatusPill(const char *text, Color accent, bool pulsing) {
     DrawRectangleRounded(r, 0.5f, 12, Fade(accent, 0.13f));
     DrawRectangleRoundedLinesEx(r, 0.5f, 12, 1.0f, Fade(accent, 0.42f));
 
-    // The dot pulses while something is running so the UI is obviously "live".
+    // The dot pulses while something is running so the UI looks live.
     float pulse = 1.0f;
     if (pulsing) {
         pulse = 0.55f + 0.45f * (0.5f + 0.5f * sinf((float)GetTime() * 5.0f));
@@ -149,10 +137,7 @@ void DrawStatusPill(const char *text, Color accent, bool pulsing) {
 
     DrawTextEx(g_fontSmall, text, {r.x + 22.0f, r.y + (height - m.y) * 0.5f}, size, TRACKING, accent);
 }
-
-// ---------------------------------------------------------------------------
 // Resets the per-algorithm UI state before a search starts.
-// ---------------------------------------------------------------------------
 void ClearAllPaths() {
     pathBfs.clear();
     pathDfs.clear();
@@ -206,11 +191,11 @@ void UnloadUI() {
 }
 
 void DrawUI() {
-    // --- Toolbar background ------------------------------------------------
+    //Toolbar background
     DrawRectangleGradientV(0, 0, ScreenWidth, HeaderHeight, HeaderBgTop, HeaderBg);
     DrawRectangle(0, HeaderHeight - 1, ScreenWidth, 1, HeaderBorder);
 
-    // --- Brand -------------------------------------------------------------
+    //Brand 
     const float brandSize = 19.0f;
     const float gapAfterBrand = 7.0f;
     float brandX = 18.0f;
@@ -219,7 +204,7 @@ void DrawUI() {
     brandX += Measure(g_fontLarge, "MAZE", brandSize).x + gapAfterBrand;
     DrawTextAt(g_fontLarge, "VISUALIZER", brandX, 13.0f, brandSize, TextPrimary);
 
-    // --- Buttons -----------------------------------------------------------
+    // Buttons
     const int buttonW = 150;
     const int buttonH = 34;
     const int gap = 10;
@@ -268,7 +253,7 @@ void DrawUI() {
                       btnDijkstra.Hovered() || btnAStar.Hovered();
     SetMouseCursor(anyHovered ? MOUSE_CURSOR_POINTING_HAND : MOUSE_CURSOR_DEFAULT);
 
-    // --- Button actions ----------------------------------------------------
+    // Button actions
     if (btnGenerate.Clicked()) {
         ResetMaze();
         startRow = GetRandomValue(0, RowCount - 1);
@@ -314,7 +299,7 @@ void DrawUI() {
         gameState = StateAStarRunning;
     }
 
-    // --- Status pill -------------------------------------------------------
+    //Status pill
     const char *statusText = "Ready";
     Color statusColor = TextMuted;
     bool pulsing = false;
