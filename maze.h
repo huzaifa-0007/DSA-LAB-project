@@ -1,9 +1,6 @@
 #ifndef MAZE_H
 #define MAZE_H
 
-// ===========================================================================
-// maze.h - Procedural maze generation (randomised DFS) and board rendering.
-// ===========================================================================
 
 // Marks the start cell as visited and seeds the generator stack.
 void InitMazeGeneration(int beginRow, int beginCol);
@@ -19,4 +16,4 @@ void DrawPath();
 // markers are never painted over.
 void DrawMarkers();
 
-#endif // MAZE_H
+#endif
