@@ -1,33 +1,14 @@
-// ===========================================================================
-// maze.cpp - Maze generation and maze rendering.
-//
-// Generation is a randomised depth-first search with an explicit stack:
-//   * mark the current cell visited
-//   * collect the unvisited neighbours that are still reachable
-//   * pick one at random, knock down the shared wall, push it on the stack
-//   * pop when a dead end is reached
-// Running it to completion produces a "perfect" maze: every cell is reachable
-// and there is exactly one path between any two cells.
-// ===========================================================================
-
 #include "maze.h"
 
 #include "core.h"
 
-// ---------------------------------------------------------------------------
 // Seeds the generator at the given cell.
-// ---------------------------------------------------------------------------
+
 void InitMazeGeneration(int beginRow, int beginCol) {
     mazeGrid[beginRow][beginCol].isVisited = true;
     generatorStack.push({beginRow, beginCol});
 }
 
-// ---------------------------------------------------------------------------
-// Performs a single generation step.
-//
-// Return immediately when the stack is empty (maze complete) or when the
-// current cell has no unvisited neighbour (dead end, so backtrack).
-// ---------------------------------------------------------------------------
 void UpdateMazeStep() {
     std::vector<int> neighbors;  // Neighbour direction indices that are still valid
 
@@ -87,14 +68,6 @@ void UpdateMazeStep() {
     generatorStack.push({nextRow, nextCol});
 }
 
-// ---------------------------------------------------------------------------
-// Draws the board: a rounded panel, the floor of every carved cell, the maze
-// walls, then the start and target markers.
-//
-// Only the top and left wall of each cell is drawn, plus the outer right and
-// bottom edges. That covers every wall exactly once instead of drawing each
-// shared wall twice.
-// ---------------------------------------------------------------------------
 void DrawPath() {
     // Panel behind the grid.
     Rectangle panel = {(float)(BoardX - 6), (float)(BoardY - 6),
@@ -132,12 +105,6 @@ void DrawPath() {
 
 }
 
-// ---------------------------------------------------------------------------
-// Draws the start and target markers.
-//
-// This is a separate pass because the markers have to stay on top of the
-// exploration wash: drawn first, a search would paint over them.
-// ---------------------------------------------------------------------------
 void DrawMarkers() {
     if (mazeGrid[startRow][startCol].isVisited == true) {
         FillCell(startRow, startCol, 0.0f, 0.35f, Fade(StartColor, 0.18f));
