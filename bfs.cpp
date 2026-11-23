@@ -1,19 +1,7 @@
-﻿// ===========================================================================
-// bfs.cpp - Breadth-First Search.
-//
-// BFS uses a FIFO queue, so cells are expanded in order of their distance from
-// the start. Every newly discovered cell stores its parent in parentBfs,
-// which is what allows the path to be rebuilt backwards from the target.
-// ===========================================================================
-
 #include "bfs.h"
 
 #include "core.h"
 
-// ---------------------------------------------------------------------------
-// Walks the parent table from the target back to the start, collecting the
-// cells in reverse order (target first, start last).
-// ---------------------------------------------------------------------------
 static void ReconstructBfsPath() {
     int currRow = targetRow;
     int currCol = targetCol;
@@ -30,17 +18,11 @@ static void ReconstructBfsPath() {
     pathBfs.push_back({startRow, startCol});
 }
 
-// ---------------------------------------------------------------------------
-// Seeds the search at the start cell.
-// ---------------------------------------------------------------------------
 void InitBfs(int beginRow, int beginCol) {
     bfsVisited[beginRow][beginCol] = 1;
     bfsQueue.push({beginRow, beginCol});
 }
 
-// ---------------------------------------------------------------------------
-// Expands a single cell per call so the traversal can be animated.
-// ---------------------------------------------------------------------------
 void StepBfs() {
     // Direction vectors: index 0 = right, 1 = left, 2 = down, 3 = up.
     int dCol[4] = {0, 0, 1, -1};
@@ -94,9 +76,6 @@ void StepBfs() {
     }
 }
 
-// ---------------------------------------------------------------------------
-// Draws the explored region, then the final path on top of it.
-// ---------------------------------------------------------------------------
 void DrawBfs() {
     // Exploration wash: a soft tint on every cell the queue has touched.
     for (int row = 0; row < RowCount; row++) {
