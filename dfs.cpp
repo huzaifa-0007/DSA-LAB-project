@@ -1,19 +1,7 @@
-﻿// ===========================================================================
-// dfs.cpp - Depth-First Search.
-//
-// The stack always holds the current cell on top. Each call looks at the open
-// neighbours of that cell, picks one at random and pushes it, so the search
-// walks a single corridor to its end before backing up.
-// ===========================================================================
-
-#include "dfs.h"
+﻿#include "dfs.h"
 
 #include "core.h"
 
-// ---------------------------------------------------------------------------
-// Walks the parent table from the target back to the start, collecting the
-// cells in reverse order (target first, start last).
-// ---------------------------------------------------------------------------
 static void ReconstructDfsPath() {
     int currRow = targetRow;
     int currCol = targetCol;
@@ -29,17 +17,13 @@ static void ReconstructDfsPath() {
     pathDfs.push_back({startRow, startCol});
 }
 
-// ---------------------------------------------------------------------------
-// Seeds the search at the start cell.
-// ---------------------------------------------------------------------------
+
 void InitDfs(int beginRow, int beginCol) {
     dfsVisited[beginRow][beginCol] = 1;
     dfsStack.push({beginRow, beginCol});
 }
 
-// ---------------------------------------------------------------------------
-// Expands a single cell per call so the traversal can be animated.
-// ---------------------------------------------------------------------------
+
 void StepDfs() {
     if (dfsStack.empty()) {
         return;
@@ -124,9 +108,6 @@ void StepDfs() {
     }
 }
 
-// ---------------------------------------------------------------------------
-// Draws the explored region, then the final path on top of it.
-// ---------------------------------------------------------------------------
 void DrawDfs() {
     // Exploration wash: a soft tint on every cell the stack has touched.
     for (int row = 0; row < RowCount; row++) {
