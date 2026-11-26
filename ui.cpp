@@ -1,9 +1,5 @@
-// ===========================================================================
 // ui.cpp - Toolbar, buttons, status pill and the shared UI fonts.
 // The buttons are the only place that changes gameState, which keeps the state
-// machine honest: a search can only start from StateWaiting, i.e. once the
-// maze has finished generating.
-// ===========================================================================
 
 #include "ui.h"
 
